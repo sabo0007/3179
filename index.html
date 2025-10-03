@@ -1,46 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-    <title>My first HTML Document</title>
+  <meta charset="utf-8" />
+  <title>Higher Education Attainment (Age 20–24) — Australia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 24px; }
+    h1 { margin: 0 0 8px; font-size: 22px; }
+    .meta { font-size: 13px; color: #555; margin-bottom: 16px; }
+    #vis { max-width: 900px; }
+    footer { margin-top: 18px; font-size: 12px; color: #555; }
+  </style>
 </head>
 <body>
-    <h1>1. Introduction to HTML (Level 1)</h1>
-    <h2>1.2.1 Creating Paragraphs (Level 2)</h2>
-    <p>Unit: FIT3179 Data visualization.</p>
-    <p>This is a paragraph about paragraphs.</p>
+  <h1>Young Australians with Year 12 or Cert III+ (20–24)</h1>
+  <div class="meta">ABS Education and Work — Table 20, latest year. Choropleth shows percentage by state/territory.</div>
 
-    <h2>1.2 Creating Tables (Level 2)</h2>
-    <h3>1.2.1 Table Rows (Level 3)</h3>
-    <p>This is a third paragraph about table rows.</p>
+  <div id="vis"></div>
+  <footer>
+    Source: ABS Education and Work (Table 20). Geometry: Admin-1 boundaries (TopoJSON). Author: Sami Abou Zolf (33106703).
+  </footer>
 
-    <h3>1.2.2 Table Columns (Level 3)</h3>
-    <p>This is a paragraph about table columns.</p>
-
-    <h2>1.3 Embedding Images (Level 2)</h2>
-    <p>This is the fourth paragraph about images in HTML.</p>
-
-    <div>
-        <h1>Table of Student and Grade </h1>
-        <table border="1" cellpadding="10%">
-            <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Grade</th>
-            </tr>
-            <tr>
-                <td>John</td>
-                <td>Doe</td>
-                <td>HD</td>
-            </tr>
-            <tr>
-                <td>Jill</td>
-                <td>Jackson testing</td>
-                <td>D</td>
-            </tr>
-            <tr>
-                <td>Jane</td>
-                <td>Smith</td>
-                <td>C</td>
-    </div>
-
+  <script>
+    vegaEmbed('#vis', 'map.json', { actions: false });
+  </script>
 </body>
+</html>
