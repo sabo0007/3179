@@ -1,0 +1,50 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 720,
+  "height": 520,
+  "title": "People aged 20–24 with Year 12 or Cert III+, by State/Territory (%, latest ABS)",
+  "projection": { "type": "mercator", "center": [134, -25], "scale": 900 },
+  "layer": [
+    { "data": { "sphere": {} }, "mark": { "type": "geoshape", "fill": "#eef4fa" } },
+    { "data": { "graticule": { "step": [30, 30] } },
+      "mark": { "type": "geoshape", "stroke": "#d7dde5", "strokeWidth": 0.6 } },
+
+    {
+      "data": {
+        "url": "data/aus-states.json",
+        "format": { "type": "topojson", "feature": "states" }
+      },
+      "transform": [
+        {
+          "lookup": "properties.STE_NAME21",
+          "from": {
+            "data": { "url": "data/education_20to24_year12_or_certIII_by_state.csv" },
+            "key": "state",
+            "fields": ["pct_year12_or_certIII_20to24"]
+          }
+        }
+      ],
+      "mark": { "type": "geoshape" },
+      "encoding": {
+        "color": {
+          "field": "pct_year12_or_certIII_20to24",
+          "type": "quantitative",
+          "legend": { "title": "% with Year 12 or Cert III+" },
+          "scale": { "scheme": "Blues" }
+        },
+        "tooltip": [
+          { "field": "properties.STE_NAME21", "title": "State/Territory" },
+          { "field": "pct_year12_or_certIII_20to24", "title": "% (20–24)", "type": "quantitative", "format": ".1f" }
+        ]
+      }
+    },
+
+    {
+      "data": {
+        "url": "data/aus-states.json",
+        "format": { "type": "topojson", "feature": "states" }
+      },
+      "mark": { "type": "geoshape", "fill": null, "stroke": "white", "strokeWidth": 1 }
+    }
+  ]
+}
