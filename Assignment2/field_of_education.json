@@ -1,0 +1,50 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "What Australians study: fields with the largest load",
+    "subtitle": "All students (EFTSL, 2024). Bar color shows growth vs 2023."
+  },
+  "width": 720,
+  "height": 500,
+  "data": { "url": "data/field_of_education.csv" },
+  "transform": [{ "filter": "datum.Type === 'All Students'" }],
+  "layer": [
+    {
+      "mark": "bar",
+      "encoding": {
+        "y": { "field": "Discipline", "type": "nominal", "sort": "-x", "title": null },
+        "x": {
+          "field": "EFTSL",
+          "type": "quantitative",
+          "title": "EFTSL (2024)",
+          "axis": { "formatType": "number", "format": ",.0f", "tickCount": 6, "labelOverlap": true }
+        },
+        "color": { "field": "Change_Percent", "type": "quantitative", "title": "Change vs 2023 (%)", "scale": { "scheme": "oranges" } },
+        "tooltip": [
+          { "field": "Discipline" },
+          { "field": "EFTSL", "title": "EFTSL", "format": ",.0f" },
+          { "field": "Change_Percent", "title": "Change vs 2023", "format": ".1f" }
+        ]
+      }
+    },
+    {
+      "transform": [
+        { "window": [{ "op": "rank", "as": "r" }], "sort": [{ "field": "EFTSL", "order": "descending" }] },
+        { "filter": "datum.r==1" },
+        { "calculate": "datum.EFTSL", "as": "x" },
+        { "calculate": "datum.Discipline", "as": "y" }
+      ],
+      "mark": { "type": "text", "align": "left", "dx": 6, "fontSize": 12, "color": "#0b1520" },
+      "encoding": {
+        "y": { "field": "y", "type": "nominal" },
+        "x": { "field": "x", "type": "quantitative" }
+      }
+    }
+  ],
+  "config": {
+    "view": { "stroke": null },
+    "axis": { "labelFont": "Inter, Segoe UI, Roboto, Arial, sans-serif", "titleFont": "Inter, Segoe UI, Roboto, Arial, sans-serif", "labelColor": "#0b1520", "titleColor": "#0b1520" },
+    "legend": { "labelFont": "Inter, Segoe UI, Roboto, Arial, sans-serif", "titleFont": "Inter, Segoe UI, Roboto, Arial, sans-serif" },
+    "title": { "font": "Inter, Segoe UI, Roboto, Arial, sans-serif", "color": "#0b1520", "anchor": "start", "fontSize": 18, "subtitleFontSize": 12, "subtitleColor": "#475467" }
+  }
+}

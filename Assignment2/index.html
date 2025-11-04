@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Mapping Australia’s Higher Education Landscape (2024)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <style>
+    :root{
+      --bg-1:#f7fafc; --bg-2:#ffffff;
+      --ink:#0b1520; --sub:#475467; --muted:#667085;
+      --line:#e6edf3; --card:#ffffff; --chip:#eef2ff;
+    }
+    html,body{height:100%}
+    body{
+      margin:0; padding:28px; color:var(--ink);
+      background:
+        radial-gradient(1200px 800px at 20% -5%, var(--bg-1), rgba(255,255,255,0) 60%),
+        linear-gradient(180deg, var(--bg-1), var(--bg-2) 320px);
+      font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;
+      overflow-x:hidden;
+    }
+    .wrap{ max-width:1600px; margin:0 auto; }
+
+    /* page header (centered) */
+    h1{ margin:0 0 6px; line-height:1.15; font-size:30px; text-align:center; }
+    .lead{ margin:0 auto 18px; color:var(--sub); font-size:14px; text-align:center; max-width:980px; }
+
+    /* grid */
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(540px, 1fr));
+      gap:28px; align-items:start;
+    }
+    .span-2{ grid-column:1 / -1; }
+
+    /* cards */
+    .card{
+      background:var(--card); border:1px solid var(--line); border-radius:14px;
+      padding:14px 14px 10px; box-shadow:0 4px 14px rgba(15,23,42,.06);
+      display:flex; flex-direction:column;
+    }
+    .kicker{ display:inline-block; font-size:12px; color:var(--muted); background:var(--chip); padding:2px 8px; border-radius:999px; margin-bottom:6px; }
+    .card h2{ margin:0 0 10px; font-size:18px; letter-spacing:.1px; text-align:center; }
+    .vis{ margin-top:2px; }
+    .vis > *{ max-width:100% }
+    .note{ margin:8px 2px 2px; color:var(--muted); font-size:12px }
+
+    /* equal-height rows with vertical centering for the chart area */
+    .equal-row{ display:grid; grid-template-columns: 1fr 1fr; gap:28px; align-items:stretch; }
+    @media (max-width:1100px){ .equal-row{ grid-template-columns: 1fr; } }
+    .equal-row .card{ display:grid; grid-template-rows:auto auto 1fr auto; }
+    .vcenter{ display:flex; align-items:center; justify-content:center; height:100%; }
+    .vtop{ display:flex; align-items:flex-start; justify-content:center; height:100%; } /* top align just this chart */
+
+    /* splitting the rows with alternating alignment and vertically centered takeaways */
+    .split{ display:grid; gap:18px; align-items:center; }
+    .split-right{ grid-template-columns: 1.7fr .9fr; } /* vis left, takeaways right */
+    .split-left { grid-template-columns: .9fr 1.7fr; }  /* takeaways left, vis right */
+    @media (max-width:1100px){
+      .split-right,.split-left{ grid-template-columns: 1fr; }
+    }
+
+    .callout{
+      background:linear-gradient(180deg,#f8fafc,#f6f7ff);
+      border:1px solid var(--line); border-radius:12px; padding:12px;
+      font-size:14px; color:#1f2937; align-self:center;
+    }
+    .callout h3{ margin:0 0 6px; font-size:14px; color:#111827; text-align:center; }
+    .callout ul{ margin:0; padding-left:18px }
+
+    #qual-age-sex{ margin-left:24px; }
+
+    .subnote{
+      margin:-4px 0 2px;
+      color:#556270;
+      text-align:center;
+      font-size:12px;
+    }
+
+    footer{ margin-top:22px; font-size:12px; color:#556270; text-align:center; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Mapping Australia’s Higher Education Landscape (2024)</h1>
+    <p class="lead">Who studies, where they study, and what they study — using ABS Education &amp; Work and the Department of Education’s 2024 enrolment/EFTSL tables.</p>
+
+    <div class="grid">
+
+      <!-- 1) EFTSL MAP  -->
+      <div class="card span-2 split split-right">
+        <div>
+          <div class="kicker">Higher education load by state</div>
+          <h2>Where Australia studies: EFTSL by state (2024)</h2>
+          <div id="eftsl-map" class="vis"></div>
+          <div class="note" style="text-align:center">Department of Education — Equivalent Full-Time Student Load. Tooltip shows change vs 2023.</div>
+        </div>
+        <aside class="callout">
+          <h3>Key takeaways</h3>
+          <ul>
+            <li>NSW and VIC carry the largest student load (EFTSL) among states.</li>
+            <li>QLD and WA are substantial contributors; ACT/NT are much smaller.</li>
+            <li>Hover for each state’s change vs 2023 to see growth momentum.</li>
+          </ul>
+        </aside>
+      </div>
+
+      <!-- 2) Attendance (left) + Gender (right)-->
+      <div class="span-2 equal-row">
+        <div class="card">
+          <div class="kicker">How we study</div>
+          <h2>Type of Attendance — Change vs 2023</h2>
+          <div class="subnote">Year-over-year change by attendance category; green bars indicate growth and red bars indicate decline.</div>
+          <div class="vtop"><div id="attendance" class="vis"></div></div> 
+          <div class="note">Change vs 2023 by category.</div>
+        </div>
+
+        <div class="card">
+          <div class="kicker">Enrolments</div>
+          <h2>Gender: Commencing vs All Students</h2>
+          <div class="vcenter"><div id="gender" class="vis"></div></div>
+          <div class="note" style="text-align:center">Department of Education (2024); grouped bars compare total vs commencing cohorts.</div>
+        </div>
+      </div>
+
+      <!-- 3) Field of Education -->
+      <div class="card span-2 split split-right">
+        <div>
+          <div class="kicker">What we study</div>
+          <h2>Field of Education (All Students)</h2>
+          <div id="foe" class="vis"></div>
+          <div class="note" style="text-align:center">EFTSL by broad field; bar colour shows growth vs 2023 (darker = stronger growth).</div>
+        </div>
+        <aside class="callout">
+          <h3>Key takeaways</h3>
+          <ul>
+            <li>Information Technology and Health carry some of the largest loads.</li>
+            <li>Education shows notable growth vs 2023, reflected by darker bars.</li>
+            <li>Creative Arts and Architecture remain smaller in overall load.</li>
+          </ul>
+        </aside>
+      </div>
+
+      <!-- 4) Non-school qualifications -->
+      <div class="card span-2 split split-left">
+        <aside class="callout">
+          <h3>Key takeaways</h3>
+          <ul>
+            <li>Attainment rises sharply from ages 20–24 to early 30s, then gradually plateaus.</li>
+            <li>Gender gap is small overall; the <strong>largest gap</strong> appears in the 25–29 cohort.</li>
+            <li>By 55–59, the gap narrows again — cohorts converge.</li>
+          </ul>
+        </aside>
+        <div>
+          <div class="kicker">Attainment</div>
+          <h2>Non-school qualifications by age &amp; sex</h2>
+          <div id="qual-age-sex" class="vis"></div>
+          <div class="note" style="text-align:center">Bars show % of each age group with a non-school qualification; legend toggles sex.</div>
+        </div>
+      </div>
+
+      <!-- 5) ABS map  -->
+      <div class="card span-2 split split-right">
+        <div>
+          <div class="kicker">Population attainment (context)</div>
+          <h2>Young people with Year 12 or Cert III+</h2>
+          <div id="abs-map" class="vis"></div>
+          <div class="note" style="text-align:center">ABS Education &amp; Work — % of 20–24 year olds by state/territory (latest available).</div>
+        </div>
+        <aside class="callout">
+          <h3>Key takeaways</h3>
+          <ul>
+            <li>East-coast states generally show higher Year 12/Cert III+ rates.</li>
+            <li>ACT and NSW lead; NT and TAS track below national leaders.</li>
+            <li>These patterns give context for state-level participation in higher ed.</li>
+          </ul>
+        </aside>
+      </div>
+
+    </div>
+
+    <footer>Sources: ABS Education &amp; Work (latest release); Department of Education (2024). Author: Sami Abou Zolf (33106703).</footer>
+  </div>
+
+  <script>
+    /* embeds */
+    vegaEmbed('#eftsl-map','eftsl_map.json',{actions:false});
+    vegaEmbed('#attendance','type_of_attendance.json',{actions:false});
+    vegaEmbed('#gender','gender_enrolments.json',{actions:false});
+    vegaEmbed('#foe','field_of_education.json',{actions:false});
+    vegaEmbed('#qual-age-sex','qualifications_age_sex.json',{actions:false});
+    vegaEmbed('#abs-map','abs_attainment_map.json',{actions:false});
+  </script>
+</body>
+</html>
