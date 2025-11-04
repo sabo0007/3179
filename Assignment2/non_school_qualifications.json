@@ -1,0 +1,91 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Non-school qualifications by age group and sex",
+    "subtitle": "Australia (ABS Education & Work) — Percent of people with non-school qualifications",
+    "fontSize": 18,
+    "subtitleFontSize": 12
+  },
+  "width": 800,
+  "height": 420,
+  "data": { "url": "data/non_school_qualifications.csv" },
+
+  "layer": [
+    {
+      "params": [
+        {
+          "name": "sex_filter_w10",
+          "select": { "type": "point", "fields": ["Sex"] },
+          "bind": "legend"
+        }
+      ],
+      "mark": { "type": "bar", "cornerRadiusEnd": 2 },
+      "encoding": {
+        "x": {
+          "field": "AgeGroup",
+          "type": "ordinal",
+          "title": "Age group",
+          "sort": ["15-19","20-24","25-29","30-34","35-39","40-44","45-49","50-54","55-59"]
+        },
+        "y": {
+          "field": "Percent",
+          "type": "quantitative",
+          "title": "With non-school qualification (%)",
+          "scale": { "domain": [0, 100] }
+        },
+        "color": {
+          "field": "Sex",
+          "type": "nominal",
+          "title": "Sex",
+          "scale": { "scheme": "set2" }
+        },
+        "xOffset": { "field": "Sex" },
+        "opacity": {
+          "condition": { "param": "sex_filter_w10", "value": 1 },
+          "value": 0.25
+        },
+        "tooltip": [
+          { "field": "AgeGroup", "title": "Age group" },
+          { "field": "Sex", "title": "Sex" },
+          { "field": "Percent", "type": "quantitative", "title": "Percent (%)", "format": ".1f" }
+        ]
+      }
+    },
+
+    {
+      "data": { "values": [{ "AgeGroup": "25-29" }] },
+      "mark": { "type": "rule", "stroke": "#888", "strokeDash": [4, 4] },
+      "encoding": {
+        "x": {
+          "field": "AgeGroup",
+          "type": "ordinal",
+          "scale": { "domain": ["15-19","20-24","25-29","30-34","35-39","40-44","45-49","50-54","55-59"] }
+        }
+      }
+    },
+
+    {
+      "data": {
+        "values": [
+          { "AgeGroup": "25-29", "y": 92, "note": "Largest gender gap (~6.2 pp)" }
+        ]
+      },
+      "mark": { "type": "text", "align": "center", "dy": -8, "fontSize": 12, "color": "#555" },
+      "encoding": {
+        "x": {
+          "field": "AgeGroup",
+          "type": "ordinal",
+          "scale": { "domain": ["15-19","20-24","25-29","30-34","35-39","40-44","45-49","50-54","55-59"] }
+        },
+        "y": { "field": "y", "type": "quantitative" },
+        "text": { "field": "note" }
+      }
+    }
+  ],
+
+  "config": {
+    "axis": { "labelFontSize": 12, "titleFontSize": 12 },
+    "legend": { "titleFontSize": 12, "labelFontSize": 12 },
+    "view": { "stroke": null }
+  }
+}

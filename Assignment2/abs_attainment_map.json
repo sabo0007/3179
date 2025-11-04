@@ -1,0 +1,47 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 720,
+  "height": 520,
+  "title": {
+    "text": "Young people with Year 12 or Cert III+",
+    "subtitle": "ABS Education & Work — % of 20–24 year olds by state/territory (latest)"
+  },
+  "projection": { "type": "mercator", "center": [134, -25], "scale": 900 },
+  "layer": [
+    { "data": { "sphere": {} }, "mark": { "type": "geoshape", "fill": "#eef4fa" } },
+    { "data": { "graticule": { "step": [30, 30] } }, "mark": { "type": "geoshape", "stroke": "#d7dde5", "strokeWidth": 0.6 } },
+    {
+      "data": { "url": "data/aus-states.topojson", "format": { "type": "topojson", "feature": "states" } },
+      "transform": [
+        {
+          "lookup": "properties.STE_NAME21",
+          "from": {
+            "data": { "url": "data/education_20to24_year12_or_certIII_by_state.csv" },
+            "key": "state",
+            "fields": ["pct_year12_or_certIII_20to24"]
+          }
+        }
+      ],
+      "mark": { "type": "geoshape" },
+      "encoding": {
+        "color": {
+          "field": "pct_year12_or_certIII_20to24",
+          "type": "quantitative",
+          "legend": { "title": "% with Year 12 or Cert III+" },
+          "scale": { "scheme": "tealblues" }
+        },
+        "tooltip": [
+          { "field": "properties.STE_NAME21", "title": "State/Territory" },
+          { "field": "pct_year12_or_certIII_20to24", "title": "% (20–24)", "type": "quantitative", "format": ".1f" }
+        ]
+      }
+    },
+    { "data": { "url": "data/aus-states.topojson", "format": { "type": "topojson", "feature": "states" } }, "mark": { "type": "geoshape", "fill": null, "stroke": "white", "strokeWidth": 1 } }
+  ],
+  "config": {
+    "view": { "stroke": null },
+    "axis": { "labelFont": "Inter, Segoe UI, Roboto, Arial, sans-serif", "titleFont": "Inter, Segoe UI, Roboto, Arial, sans-serif", "labelColor": "#0b1520", "titleColor": "#0b1520" },
+    "legend": { "labelFont": "Inter, Segoe UI, Roboto, Arial, sans-serif", "titleFont": "Inter, Segoe UI, Roboto, Arial, sans-serif" },
+    "title": { "font": "Inter, Segoe UI, Roboto, Arial, sans-serif", "color": "#0b1520", "anchor": "start", "fontSize": 18, "subtitleFontSize": 12, "subtitleColor": "#475467" }
+  }
+}

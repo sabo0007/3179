@@ -1,0 +1,46 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Non-school qualifications by age and sex",
+    "subtitle": "ABS Education & Work — legend toggles sex; values are % of people in each age group"
+  },
+  "width": 720,
+  "height": 420,
+  "data": { "url": "data/non_school_qualifications.csv" },
+  "layer": [
+    {
+      "params": [
+        { "name": "sex_filter", "select": { "type": "point", "fields": ["Sex"] }, "bind": "legend" }
+      ],
+      "mark": { "type": "bar", "cornerRadiusEnd": 2 },
+      "encoding": {
+        "x": { "field": "AgeGroup", "type": "ordinal", "sort": ["15-19","20-24","25-29","30-34","35-39","40-44","45-49","50-54","55-59"], "title": "Age group" },
+        "y": { "field": "Percent", "type": "quantitative", "title": "With a non-school qualification (%)", "scale": { "domain": [0, 100] } },
+        "color": { "field": "Sex", "type": "nominal", "title": "Sex", "scale": { "scheme": "tableau20" } },
+        "xOffset": { "field": "Sex" },
+        "opacity": { "condition": { "param": "sex_filter", "value": 1 }, "value": 0.25 },
+        "tooltip": [
+          { "field": "AgeGroup", "title": "Age group" },
+          { "field": "Sex", "title": "Sex" },
+          { "field": "Percent", "title": "Percent", "format": ".1f" }
+        ]
+      }
+    },
+    {
+      "data": { "values": [{ "AgeGroup": "25-29", "y": 92, "note": "Largest gender gap" }] },
+      "mark": { "type": "text", "align": "center", "dy": -8, "fontSize": 12, "color": "#444" },
+      "encoding": { "x": { "field": "AgeGroup", "type": "ordinal" }, "y": { "field": "y", "type": "quantitative" }, "text": { "field": "note" } }
+    },
+    {
+      "data": { "values": [{ "AgeGroup": "45-49", "y": 88, "note": "Gap narrows again" }] },
+      "mark": { "type": "text", "align": "center", "dy": -8, "fontSize": 12, "color": "#444" },
+      "encoding": { "x": { "field": "AgeGroup", "type": "ordinal" }, "y": { "field": "y", "type": "quantitative" }, "text": { "field": "note" } }
+    }
+  ],
+  "config": {
+    "view": { "stroke": null },
+    "axis": { "labelFont": "Inter, Segoe UI, Roboto, Arial, sans-serif", "titleFont": "Inter, Segoe UI, Roboto, Arial, sans-serif", "labelColor": "#0b1520", "titleColor": "#0b1520" },
+    "legend": { "labelFont": "Inter, Segoe UI, Roboto, Arial, sans-serif", "titleFont": "Inter, Segoe UI, Roboto, Arial, sans-serif" },
+    "title": { "font": "Inter, Segoe UI, Roboto, Arial, sans-serif", "color": "#0b1520", "anchor": "start", "fontSize": 18, "subtitleFontSize": 12, "subtitleColor": "#475467" }
+  }
+}

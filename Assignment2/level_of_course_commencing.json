@@ -1,0 +1,56 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Study levels as a share of all enrolments",
+    "subtitle": "Commencing vs All students (2024). 100% stacked bars."
+  },
+  "width": 720,
+  "height": 340,
+  "data": { "url": "data/level_of_course_commencing.csv" },
+  "transform": [
+    { "joinaggregate": [{ "op": "sum", "field": "Count", "as": "total" }], "groupby": ["Category"] },
+    { "calculate": "datum.Count / datum.total * 100", "as": "pct" }
+  ],
+  "mark": { "type": "bar" },
+  "encoding": {
+    "x": { "field": "Category", "type": "nominal", "title": null },
+    "y": { "field": "pct", "type": "quantitative", "title": "Share (%)", "stack": "normalize" },
+    "color": {
+      "field": "Level",
+      "type": "nominal",
+      "legend": { "columns": 1 },
+      "scale": { "scheme": "tableau10" }
+    },
+    "tooltip": [
+      { "field": "Category" },
+      { "field": "Level" },
+      { "field": "pct", "title": "Share (%)", "format": ".1f" },
+      { "field": "Count", "title": "Enrolments", "format": "," }
+    ]
+  },
+  "config": {
+    "view": { "stroke": null },
+    "axis": {
+      "labelFont": "Inter, Segoe UI, Roboto, Arial, sans-serif",
+      "titleFont": "Inter, Segoe UI, Roboto, Arial, sans-serif",
+      "labelColor": "#0b1520",
+      "titleColor": "#0b1520"
+    },
+    "legend": {
+      "orient": "right",
+      "direction": "vertical",
+      "columns": 1,
+      "labelFontSize": 12,
+      "titleFontSize": 13,
+      "titlePadding": 4
+    },
+    "title": {
+      "font": "Inter, Segoe UI, Roboto, Arial, sans-serif",
+      "color": "#0b1520",
+      "anchor": "start",
+      "fontSize": 18,
+      "subtitleFontSize": 12,
+      "subtitleColor": "#475467"
+    }
+  }
+}

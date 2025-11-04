@@ -1,0 +1,37 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Gender distribution of higher-education enrolments",
+    "subtitle": "2024; Commencing vs All students (Department of Education)"
+  },
+  "width": 720,
+  "height": 380,
+  "data": { "url": "data/gender_enrolments.csv" },
+  "mark": { "type": "bar", "cornerRadiusEnd": 2 },
+  "params": [
+    { "name": "gender_filter", "select": { "type": "point", "fields": ["Gender"] }, "bind": "legend" }
+  ],
+  "encoding": {
+    "x": { "field": "Type", "type": "nominal", "title": null },
+    "y": {
+      "field": "Count",
+      "type": "quantitative",
+      "title": "Enrolments",
+      "axis": { "formatType": "number", "format": ",.0f", "tickCount": 6 }  
+    },
+    "color": { "field": "Gender", "type": "nominal", "scale": { "scheme": "set2" } },
+    "xOffset": { "field": "Gender" },
+    "opacity": { "condition": { "param": "gender_filter", "value": 1 }, "value": 0.25 },
+    "tooltip": [
+      { "field": "Gender" }, { "field": "Type" },
+      { "field": "Count", "title": "Enrolments", "format": ",.0f" },
+      { "field": "Change_Percent", "title": "Change vs 2023", "format": ".1f" }
+    ]
+  },
+  "config": {
+    "view": { "stroke": null },
+    "axis": { "labelFont": "Inter, Segoe UI, Roboto, Arial, sans-serif", "titleFont": "Inter, Segoe UI, Roboto, Arial, sans-serif", "labelColor": "#0b1520", "titleColor": "#0b1520" },
+    "legend": { "labelFont": "Inter, Segoe UI, Roboto, Arial, sans-serif", "titleFont": "Inter, Segoe UI, Roboto, Arial, sans-serif" },
+    "title": { "font": "Inter, Segoe UI, Roboto, Arial, sans-serif", "color": "#0b1520", "anchor": "start", "fontSize": 18, "subtitleFontSize": 12, "subtitleColor": "#475467" }
+  }
+}
